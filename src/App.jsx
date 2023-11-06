@@ -9,26 +9,41 @@ function App() {
     projects: [],
   });
 
-  function handleStartAddProject(){
-    setProjectsState(prev => {
+  function handleStartAddProject() {
+    setProjectsState((prev) => {
       return {
         ...prev,
         selectedProjectId: null,
-      }
-    })
+      };
+    });
+  }
+
+  function handleAddProject(projectData) {
+    setProjectsState((prev) => {
+      const projectId = Math.random();
+      const newProject = {
+        ...projectData,
+        id: projectId,
+      };
+      return {
+        ...prev,
+        selectedProjectId: undefined,
+        projects: [...prev.projects, newProject],
+      };
+    });
   }
 
   let content;
 
-  if(projectsState.selectedProjectId === null){
-    content = <NewProject />
-  } else if (projectsState.selectedProjectId === undefined){
-    content = <NoProjectSelected onStartAddProject={handleStartAddProject}/>
+  if (projectsState.selectedProjectId === null) {
+    content = <NewProject onAdd={handleAddProject}/>;
+  } else if (projectsState.selectedProjectId === undefined) {
+    content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
   }
 
   return (
     <main className="h-screen my-8 flex gap-8">
-      <Sidebar onStartAddProject={handleStartAddProject}/>
+      <Sidebar onStartAddProject={handleStartAddProject} projects={projectsState.projects}/>
       {content}
     </main>
   );
